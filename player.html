@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Player — Bug Personagem eFootball</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="top">
+    <div class="wrap">
+      <a href="index.html" class="back">&larr; Voltar</a>
+      <h1 id="playerName">Carregando...</h1>
+      <p id="playerSub" class="tag"></p>
+    </div>
+  </header>
+
+  <main class="wrap player-page">
+    <section class="player-card">
+      <div class="player-visual">
+        <img id="playerImage" src="" alt="player" />
+      </div>
+      <div class="player-stats">
+        <div class="stat-row">
+          <div class="stat-group">
+            <label>OVR</label><div id="statOvr" class="big">0</div>
+          </div>
+          <div class="stat-group">
+            <label>Posição</label><div id="statPos" class="muted">-</div>
+          </div>
+          <div class="stat-group">
+            <label>Clube</label><div id="statClub" class="muted">-</div>
+          </div>
+        </div>
+
+        <div class="stats-grid" id="statsGrid">
+          <!-- pace, shooting, passing, dribbling, defense, physical -->
+        </div>
+
+        <div style="margin-top:14px">
+          <button id="addToSquadBtn">Adicionar ao Squad</button>
+          <button id="compareBtn">Comparar</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <div class="wrap">© 2025 Bug Personagem eFootball — Não oficial</div>
+  </footer>
+
+  <script src="js/player.js"></script>
+</body>
+</html>
