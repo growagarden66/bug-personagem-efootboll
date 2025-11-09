@@ -1,0 +1,195 @@
+<!--
+Project: Bug Personagem eFootball
+Single-file demo site for GitHub Pages
+How to deploy:
+1. Create a new GitHub repository named `bug-personagem-efootboll` (or any name).
+2. Add this file as `index.html` at the repo root.
+3. In the repository settings -> Pages, choose branch `main` (or `master`) and folder `/ (root)` and enable Pages.
+4. The site will be available at https://<your-username>.github.io/<repo-name>/ in a few minutes.
+
+Notes:
+- This is a lightweight demo (HTML/CSS/JS). It stores saved squads in localStorage.
+- Replace sample data in `PLAYERS` with your real data or fetch from an API.
+- You can later split into multiple files, add backend, or convert to React.
+--><!doctype html>
+
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Bug Personagem eFootball — Demo</title>
+  <style>
+    :root{--bg:#0b0f1a;--card:#0f1724;--accent:#1fb6ff;--muted:#9aa6b2;--glass:rgba(255,255,255,0.03)}
+    *{box-sizing:border-box}
+    body{font-family:Inter,system-ui,Arial;background:linear-gradient(180deg,#051025 0%,#071325 100%);color:#e6eef6;margin:0;padding:24px}
+    header{display:flex;align-items:center;gap:16px;margin-bottom:18px}
+    h1{font-size:20px;margin:0}
+    p.lead{margin:0;color:var(--muted);font-size:13px}
+    .layout{display:grid;grid-template-columns:1fr 340px;gap:18px}
+    .card{background:var(--card);padding:14px;border-radius:12px;box-shadow:0 6px 20px rgba(2,6,23,0.6)}
+    .searchbar{display:flex;gap:8px;margin-bottom:12px}
+    input[type="search"]{flex:1;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:var(--glass);color:inherit}
+    button{background:var(--accent);border:none;color:#042431;padding:8px 10px;border-radius:8px;cursor:pointer}
+    .players{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px}
+    .player{padding:10px;border-radius:10px;background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent);cursor:pointer}
+    .player h3{margin:0;font-size:14px}
+    .player small{color:var(--muted)}
+    .badge{display:inline-block;padding:4px 8px;border-radius:999px;background:rgba(255,255,255,0.03);font-size:12px}
+    .side{position:relative}
+    .squad-list{display:flex;flex-direction:column;gap:8px;margin-top:8px}
+    .squad-item{display:flex;justify-content:space-between;align-items:center;padding:8px;border-radius:8px;background:rgba(255,255,255,0.02)}
+    .muted{color:var(--muted);font-size:13px}
+    footer{margin-top:18px;color:var(--muted);font-size:13px}
+    .controls{display:flex;gap:8px;margin-top:10px}
+    .pill{padding:6px 8px;background:rgba(255,255,255,0.02);border-radius:8px;font-size:13px}
+    .empty{opacity:0.6;padding:18px;border-radius:10px;background:linear-gradient(180deg,rgba(255,255,255,0.01),transparent);text-align:center}
+    @media(max-width:900px){.layout{grid-template-columns:1fr}.side{order:2}}
+  </style>
+</head>
+<body>
+  <header>
+    <div>
+      <h1>Bug Personagem eFootball</h1>
+      <p class="lead">Demo de site para consultar jogadores, montar squad e salvar localmente.</p>
+    </div>
+  </header>  <main class="layout">
+    <section>
+      <div class="card">
+        <div class="searchbar">
+          <input id="q" type="search" placeholder="Pesquisar por nome, posição ou habilidade..." />
+          <button id="clear">Limpar</button>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:10px">
+          <div class="pill">Quantidade jogadores: <span id="total">0</span></div>
+          <div class="pill">Squad força: <span id="power">0</span></div>
+        </div><div id="players" class="players"></div>
+
+  </div>
+
+  <div class="card" style="margin-top:12px">
+    <h3 style="margin-top:0">Detalhes do jogador</h3>
+    <div id="detail" class="empty">Selecione um jogador para ver detalhes aqui.</div>
+  </div>
+
+</section>
+
+<aside class="side">
+  <div class="card">
+    <h3>Meu Squad</h3>
+    <div class="muted">Salvo no seu navegador — aparece em qualquer página deste site.</div>
+    <div id="squad" class="squad-list"></div>
+
+    <div class="controls">
+      <button id="export">Exportar JSON</button>
+      <button id="clearSquad">Limpar Squad</button>
+    </div>
+
+  </div>
+
+  <div class="card" style="margin-top:12px">
+    <h4>Instruções rápidas</h4>
+    <ul class="muted">
+      <li>Clique em um jogador para ver mais informações e adicionar ao squad.</li>
+      <li>Use exportar para baixar um arquivo JSON do seu squad.</li>
+      <li>Substitua a lista `PLAYERS` no script por seus dados reais.</li>
+    </ul>
+  </div>
+
+</aside>
+
+  </main>  <footer>
+    Criado para deploy no GitHub Pages • Nome do site: <strong>Bug Personagem eFootball</strong>
+  </footer>  <script>
+    // Sample data: replace or fetch from remote API
+    const PLAYERS = [
+      {id:1,name:'Lucas Silva',pos:'MC',ovr:82,dribble:85,pace:71,contract:7,cost:1200},
+      {id:2,name:'R. Pereira',pos:'ST',ovr:79,dribble:74,pace:88,contract:4,cost:900},
+      {id:3,name:'M. Costa',pos:'GK',ovr:83,dribble:30,pace:40,contract:6,cost:1100},
+      {id:4,name:'A. Gomes',pos:'LB',ovr:77,dribble:68,pace:76,contract:3,cost:700},
+      {id:5,name:'D. Rocha',pos:'RW',ovr:80,dribble:82,pace:86,contract:5,cost:980}
+    ];
+
+    // Helpers
+    const el = sel => document.querySelector(sel);
+    const elAll = sel => document.querySelectorAll(sel);
+
+    // State
+    let state = {players:PLAYERS.slice(), squad: loadSquad()};
+
+    // Init
+    document.getElementById('q').addEventListener('input', onSearch);
+    document.getElementById('clear').addEventListener('click', ()=>{el('#q').value=''; onSearch();});
+    document.getElementById('export').addEventListener('click', exportSquad);
+    document.getElementById('clearSquad').addEventListener('click', ()=>{state.squad=[]; saveSquad(); renderSquad(); renderPlayers();});
+
+    renderPlayers(); renderSquad();
+
+    function onSearch(){
+      const q = el('#q').value.trim().toLowerCase();
+      state.players = PLAYERS.filter(p=> (p.name+ ' '+p.pos+' '+p.ovr).toLowerCase().includes(q) );
+      renderPlayers();
+    }
+
+    function renderPlayers(){
+      const wrap = el('#players'); wrap.innerHTML='';
+      el('#total').textContent = state.players.length;
+      state.players.forEach(p=>{
+        const div = document.createElement('div'); div.className='player';
+        div.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center"><h3>${p.name}</h3><span class="badge">${p.pos}</span></div><small class="muted">OVR ${p.ovr} • Custo ${p.cost}</small>`;
+        div.addEventListener('click', ()=>showDetail(p));
+        wrap.appendChild(div);
+      });
+      calculatePower();
+    }
+
+    function showDetail(p){
+      const container = el('#detail');
+      container.className='card';
+      container.innerHTML = `
+        <h3 style="margin-top:0">${p.name} <small class="muted">(${p.pos})</small></h3>
+        <p class="muted">OVR ${p.ovr} • Contrato ${p.contract} semanas • Custo ${p.cost}</p>
+        <ul class="muted">
+          <li>Drible: ${p.dribble}</li>
+          <li>Pace: ${p.pace}</li>
+        </ul>
+        <div style="display:flex;gap:8px;margin-top:8px">
+          <button id="add-${p.id}">Adicionar ao squad</button>
+          <button id="compare-${p.id}">Comparar</button>
+        </div>
+      `;
+      document.getElementById(`add-${p.id}`).addEventListener('click', ()=>{ addToSquad(p); });
+      document.getElementById(`compare-${p.id}`).addEventListener('click', ()=>{ alert('Funcionalidade de comparar ainda não implementada nesta demo.'); });
+    }
+
+    function addToSquad(p){
+      if(state.squad.find(s=>s.id===p.id)){ alert('Já está no squad'); return; }
+      state.squad.push(p); saveSquad(); renderSquad(); calculatePower();
+    }
+
+    function renderSquad(){
+      const wrap = el('#squad'); wrap.innerHTML='';
+      if(state.squad.length===0){ wrap.innerHTML='<div class="empty">Seu squad está vazio.</div>'; return; }
+      state.squad.forEach((s,idx)=>{
+        const row = document.createElement('div'); row.className='squad-item';
+        row.innerHTML = `<div><strong>${s.name}</strong><div class="muted">${s.pos} • OVR ${s.ovr}</div></div><div style="display:flex;gap:6px;align-items:center"><button data-idx="${idx}" class="small-remove">Remover</button></div>`;
+        wrap.appendChild(row);
+      });
+      wrap.querySelectorAll('.small-remove').forEach(btn=>btn.addEventListener('click', e=>{ const idx=+e.target.dataset.idx; state.squad.splice(idx,1); saveSquad(); renderSquad(); renderPlayers(); }));
+    }
+
+    function calculatePower(){
+      const power = state.squad.reduce((s,p)=>s+p.ovr,0);
+      el('#power').textContent = power;
+    }
+
+    function saveSquad(){ localStorage.setItem('bug_ef_squad', JSON.stringify(state.squad)); }
+    function loadSquad(){ try{ return JSON.parse(localStorage.getItem('bug_ef_squad'))||[] }catch(e){return []} }
+
+    function exportSquad(){
+      const dataStr = JSON.stringify(state.squad, null, 2);
+      const blob = new Blob([dataStr], {type:'application/json'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a'); a.href = url; a.download = 'squad-bug-personagem.json'; a.click(); URL.revokeObjectURL(url);
+    }
+  </script></body>
+  </html>
